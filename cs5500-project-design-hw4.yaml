@@ -1,0 +1,692 @@
+swagger: "2.0"
+info:
+  description: "This is the API definition of our Facebook Clone App."
+  version: "1.0.0"
+  title: "Facebook Clone App"
+  contact:
+    email: "shen.haot@northeastern.edu"
+host: "facebookclone.swagger.io"
+basePath: "/v1"
+tags:
+  - name: "post"
+    description: "Everything about Post"
+  - name: "user"
+    description: "Everything about User"
+  - name: "search"
+    description: "Everything about Search"
+schemes:
+  - "http"
+  - "https"
+paths:
+  /post/{postId}:
+    put:
+      tags:
+        - "post"
+      summary: "Comment on a post"
+      description: ""
+      operationId: "commentPost"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "postId"
+          description: "ID of post to comment on"
+          required: true
+          type: "integer"
+          format: "int64"
+        - in: "body"
+          name: "body"
+          description: "New comment to be published to the post"
+          required: true
+          schema:
+            $ref: "#/definitions/Comment"
+      responses:
+        "201":
+          description: "Updated successfully"
+        "400":
+          description: "Invalid image supplied"
+        "404":
+          description: "Post not found"
+        "500":
+          description: "Internal server error"
+    delete:
+      tags:
+        - "post"
+      summary: "Delete a post"
+      description: ""
+      operationId: "deletePost"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "postId"
+          description: "Post id to delete"
+          required: true
+          type: "string"
+      responses:
+        "400":
+          description: "Invalid post id supplied"
+        "404":
+          description: "Post not found"
+  /post/user/{userId}:
+    post:
+      tags:
+        - "post"
+      summary: "Create a post"
+      description: ""
+      operationId: "createPost"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          description: "Create a post for the user"
+          required: true
+          type: "integer"
+          format: "int64"
+        - in: "body"
+          name: "body"
+          description: "Post metadata and content used to create the post"
+          required: true
+          schema:
+            $ref: "#/definitions/Post"
+      responses:
+        "201":
+          description: "Created successfully"
+        "405":
+          description: "Invalid input"
+        "500":
+          description: "Internal server error"
+    get:
+      tags:
+        - "post"
+      summary: "Get all the posts for a user"
+      description: ""
+      operationId: "getPost"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          description: "User id used to get all the posts"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "Get all the posts successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Post"
+        "404":
+          description: "User not found"
+        "500":
+          description: "Internal server error"
+  /user/register:
+    post:
+      tags:
+        - "user"
+      summary: "Register a new user"
+      description: ""
+      operationId: "createUser"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "User information"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "201":
+          description: "Created successfully"
+        "400":
+          description: "Invalid user information body"
+  /user/activate/{userId}:
+    put:
+      tags:
+        - "user"
+      summary: "Activate an inactive account"
+      description: ""
+      operationId: "activateAccount"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          description: "Inactive account user id"
+          required: true
+          type: "string"
+        - in: "query"
+          name: "token"
+          description: "Validation token"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "Activated successfully"
+        "400":
+          description: "Invalid email"
+        "401":
+          description: "Unauthorized user"
+  /user/verify/{userId}:
+    put:
+      tags:
+        - "user"
+      summary: "Verify user through email"
+      description: ""
+      operationId: "verifyAccount"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          description: "User id of the unverified account"
+          required: true
+          type: "string"
+      responses:
+        "400":
+          description: "Account already verified"
+        "200":
+          description: "Email verification sent successfully"
+        "500":
+          description: "Internal server error"
+  /user/password:
+    put:
+      tags:
+        - "user"
+      summary: "Update user password"
+      description: ""
+      operationId: "updatePassword"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "user"
+          description: "User with new email"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "201":
+          description: "Password updated"
+        "404":
+          description: "User not found using email"
+  /user/profile/{userId}:
+    get:
+      tags:
+        - "user"
+      summary: "Get the user profile"
+      description: ""
+      operationId: "getProfile"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          description: "User id"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "200":
+          description: "User profile got"
+        "404":
+          description: "User not found"
+    put:
+      tags:
+        - "user"
+      summary: "Update user profile picture"
+      description: ""
+      operationId: "updateProfilePic"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          description: "User id"
+          required: true
+          type: "integer"
+          format: "int64"
+        - in: "query"
+          name: "picUrl"
+          description: "Url of the new profile picture"
+          required: true
+          type: "string"
+      responses:
+        "201":
+          description: "Profile picture updated"
+        "400":
+          description: "Picture url not valid"
+        "404":
+          description: "User not found"
+  /user/cover/{userId}:
+    put:
+      tags:
+        - "user"
+      summary: "Update user cover picture"
+      description: ""
+      operationId: "updateCoverPic"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          description: "User id"
+          required: true
+          type: "integer"
+          format: "int64"
+        - in: "query"
+          name: "picUrl"
+          description: "Url of the new cover picture"
+          required: true
+          type: "string"
+      responses:
+        "201":
+          description: "Cover picture updated"
+        "400":
+          description: "Picture url not valid"
+        "404":
+          description: "User not found"
+  /user/details/{userId}:
+    put:
+      tags:
+        - "user"
+      summary: "Update the user details"
+      description: ""
+      operationId: "updateDetails"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          description: "User id"
+          required: true
+          type: "integer"
+          format: "int64"
+        - in: "body"
+          name: "details"
+          description: "New user details"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "201":
+          description: "User details updated"
+        "400":
+          description: "User details not valid"
+        "404":
+          description: "User not found"
+  /user/request/{userId}/{otherUserId}:
+    post:
+      tags:
+        - "user"
+      summary: "Send a friend request"
+      description: ""
+      operationId: "addFriend"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          description: "User id"
+          required: true
+          type: "integer"
+          format: "int64"
+        - in: "path"
+          name: "otherUserId"
+          description: "The id of the user to send friend request"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "201":
+          description: "Friend added"
+        "400":
+          description: "Friend request already sent"
+        "404":
+          description: "User not found"
+        "500":
+          description: "Internal server error"
+    delete:
+      tags:
+        - "user"
+      summary: "Delete a friend request"
+      description: ""
+      operationId: "deleteFriendRequest"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          description: "User id"
+          required: true
+          type: "integer"
+          format: "int64"
+        - in: "path"
+          name: "otherUserId"
+          description: "The id of the user to remove friend request"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "400":
+          description: "Can't cancel request to itself"
+        "500":
+          description: "Internal server error"
+  /user/follow/{userId}/{otherUserId}:
+    post:
+      tags:
+        - "user"
+      summary: "Follow other user"
+      description: ""
+      operationId: "followUser"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          description: "User id"
+          required: true
+          type: "integer"
+          format: "int64"
+        - in: "path"
+          name: "otherUserId"
+          description: "The id of the user to follow"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "201":
+          description: "Followed"
+        "404":
+          description: "User not found"
+        "500":
+          description: "Internal server error"
+    delete:
+      tags:
+        - "user"
+      summary: "Unfollow other user"
+      description: ""
+      operationId: "unfollowUser"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          description: "User id"
+          required: true
+          type: "integer"
+          format: "int64"
+        - in: "path"
+          name: "otherUserId"
+          description: "The id of the user to unfollow"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "400":
+          description: "Can't unfollow itself"
+        "500":
+          description: "Internal server error"
+  /user/{searchTerm}:
+    get:
+      tags:
+        - "user"
+      summary: "Get the filtered users based on search term"
+      description: ""
+      operationId: "getFilteredUsers"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "searchTerm"
+          description: "Search term used to filter users"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "Users search completed"
+        "500":
+          description: "Internal server error"
+  /search/{userId}:
+    get:
+      tags:
+        - "search"
+      summary: "Get the search history of a given user"
+      description: ""
+      operationId: "getUserSearchHistory"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          description: "User id to get search history for"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "200":
+          description: "Get search history completed"
+        "404":
+          description: "User not found"
+        "500":
+          description: "Internal server error"
+    put:
+      tags:
+        - "search"
+      summary: "Add a search to user search history"
+      description: ""
+      operationId: "addToUserSearchHistory"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          description: "User id to add search history to"
+          required: true
+          type: "integer"
+          format: "int64"
+        - in: "body"
+          name: "search"
+          description: "Information of a search"
+          required: true
+          schema:
+            $ref: "#/definitions/Search"
+      responses:
+        "201":
+          description: "Search added"
+        "404":
+          description: "User not found"
+        "500":
+          description: "Internal server error"
+  /search/user/{userId}/otherUser/{otherUserId}:
+    delete:
+      tags:
+        - "search"
+      summary: "Delete the search from user search history"
+      description: ""
+      operationId: "deleteFromUserSearchHistory"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "userId"
+          description: "User id to add search history to"
+          required: true
+          type: "integer"
+          format: "int64"
+        - in: "path"
+          name: "otherUserId"
+          description: "Other user id to remove history of"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "404":
+          description: "User not found"
+        "500":
+          description: "Internal server error"
+
+definitions:
+  Image:
+    type: "string"
+
+  Post:
+    type: "object"
+    properties:
+      postType:
+        type: "string"
+        enum:
+          - "profilePicture"
+          - "coverPicture"
+          - "null"
+        default: "null"
+      text:
+        type: "string"
+      images:
+        type: "array"
+        items:
+          $ref: "#/definitions/Image"
+      user:
+        $ref: "#/definitions/User"
+      background:
+        type: "string"
+      comments:
+        type: "array"
+        items:
+          $ref: "#/definitions/Comment"
+      timestamp:
+        type: "string"
+        format: "date-time"
+
+  Comment:
+    type: "object"
+    properties:
+      comment:
+        type: "string"
+      image:
+        $ref: "#/definitions/Image"
+      commentBy:
+        $ref: "#/definitions/User"
+      commentAt:
+        type: string
+        format: "date-time"
+
+  User:
+    type: "object"
+    properties:
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      username:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      picture:
+        type: "string"
+      cover:
+        type: "string"
+      gender:
+        type: "string"
+      birthYear:
+        type: "integer"
+        format: "int32"
+      birthMonth:
+        type: "integer"
+        format: "int32"
+      birthDay:
+        type: "integer"
+        format: "int32"
+      verified:
+        type: "boolean"
+      friends:
+        type: "array"
+        items:
+          $ref: "#/definitions/User"
+      following:
+        type: "array"
+        items:
+          $ref: "#/definitions/User"
+      followers:
+        type: "array"
+        items:
+          $ref: "#/definitions/User"
+      requests:
+        type: "array"
+        items:
+          $ref: "#/definitions/User"
+      details:
+        $ref: "#/definitions/Details"
+
+  Details:
+    type: "object"
+    properties:
+      bio:
+        type: "string"
+      otherName:
+        type: "string"
+      job:
+        type: "string"
+      workplace:
+        type: "string"
+      highSchool:
+        type: "string"
+      college:
+        type: "string"
+      currentCity:
+        type: "string"
+      hometown:
+        type: "string"
+      relationship:
+        type: "string"
+        enum:
+          - "single"
+          - "in a relationship"
+          - "married"
+          - "divorced"
+      instagram:
+        type: "string"
+  Search:
+    type: "object"
+    properties:
+      searchTerm:
+        type: "string"
+      user:
+        $ref: "#/definitions/User"
