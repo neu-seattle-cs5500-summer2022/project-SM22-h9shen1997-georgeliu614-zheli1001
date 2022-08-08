@@ -2,8 +2,6 @@ name: deploy-to-heroku
 
 on:
   push:
-    paths:
-      - "backend/**"
     branches:
       - main
 
