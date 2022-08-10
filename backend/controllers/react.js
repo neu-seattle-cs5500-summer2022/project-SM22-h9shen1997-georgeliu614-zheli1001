@@ -1,6 +1,7 @@
-const React = require("../models/React");
-const User = require("../models/User");
-const mongoose = require("mongoose");
+const React = require('../models/React');
+const User = require('../models/User');
+const mongoose = require('mongoose');
+
 exports.reactPost = async (req, res) => {
   try {
     const { postId, react } = req.body;
@@ -39,7 +40,7 @@ exports.getReacts = async (req, res) => {
     )?.react;
     */
     const newReacts = reactsArray.reduce((group, react) => {
-      let key = react["react"];
+      let key = react['react'];
       group[key] = group[key] || [];
       group[key].push(react);
       return group;
@@ -47,27 +48,27 @@ exports.getReacts = async (req, res) => {
 
     const reacts = [
       {
-        react: "like",
+        react: 'like',
         count: newReacts.like ? newReacts.like.length : 0,
       },
       {
-        react: "love",
+        react: 'love',
         count: newReacts.love ? newReacts.love.length : 0,
       },
       {
-        react: "haha",
+        react: 'haha',
         count: newReacts.haha ? newReacts.haha.length : 0,
       },
       {
-        react: "sad",
+        react: 'sad',
         count: newReacts.sad ? newReacts.sad.length : 0,
       },
       {
-        react: "wow",
+        react: 'wow',
         count: newReacts.wow ? newReacts.wow.length : 0,
       },
       {
-        react: "angry",
+        react: 'angry',
         count: newReacts.angry ? newReacts.angry.length : 0,
       },
     ];
