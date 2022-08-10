@@ -87,7 +87,7 @@ _Below is an example of how you can instruct your audience on installing and set
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   git clone https://github.com/neu-seattle-cs5500-summer2022/project-SM22-h9shen1997-georgeliu614-zheli1001.git
    ```
 2. Install NPM packages
    ```sh
